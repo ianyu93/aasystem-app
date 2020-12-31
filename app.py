@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
 fred = Fred(api_key = "3e7ce9d3322d45b49f624720abd0f36a")
 quandl.ApiConfig.api_key = "_gTGp-_JJ9kKR7-hCGT5"
-
+ 
 st.title('My first app')
 
 true = yf.Ticker("^GSPC").history(start = '2020-12-01', period="1m")['Close']
