@@ -30,5 +30,3 @@ fig.update_layout(height=500, width=1000,
                   title_font_size = 30, title_x=0.5)
 
 st.plotly_chart(fig)
-
- 
