@@ -32,7 +32,7 @@ table.index = pd.to_datetime(table.index)
 
 ################ Getting Real-Time Data ################
 ## Get data
-start = table.index[0]-timedelta(days=23)
+start = table.index[0]
 stock = yf.Ticker("^GSPC").history(start=start)
 yields = quandl.get("USTREASURY/YIELD",start_date=start)
 usd = yf.Ticker("DX-Y.NYB").history(start=start)
@@ -68,6 +68,9 @@ wti = wti.reindex(index=date_range, method='ffill').fillna(method='ffill')
 gold = gold.reindex(index=date_range, method='ffill')
 ## Concat
 table2 = pd.concat([stock,yields,usd,gold,wti], axis=1, ignore_index=False)
+
+table_col_order = table2.columns
+table = table[table_col_order]
 
 
 ################ Efficient Frontier ################
