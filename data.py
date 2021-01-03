@@ -69,6 +69,7 @@ gold = gold.reindex(index=date_range, method='ffill')
 ## Concat
 table2 = pd.concat([stock,yields,usd,gold,wti], axis=1, ignore_index=False)
 
+## Align the column order as both tables have the same col name
 table_col_order = table2.columns
 table = table[table_col_order]
 
