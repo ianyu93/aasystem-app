@@ -81,7 +81,7 @@ table = table[table_col_order]
 def EfficientFrontier(start_date, table, name):
 ### Populate portfolios
 # Calculate daily and annual returns of the stocks
-    table[start_date:]
+    table = table[start_date:]
     returns_daily = table.pct_change()
     returns_quarterly = returns_daily.mean() * 21
 
