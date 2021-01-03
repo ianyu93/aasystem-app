@@ -226,7 +226,7 @@ def EfficientFrontier(table):
 
 
 ################ App Content ################
-page_list = ["Forecast", "Predicted Optimal Portfolio", "True Optimal Allocatoin"]
+page_list = ["Forecast", "Optimal Portfolio"]
 page = st.sidebar.selectbox(
     "View",
     (page_list)
@@ -243,8 +243,6 @@ if page == page_list[1]:
     st.write(pred_fig)
     st.write(pred_port)
 
-if page == page_list[2]:
     st.title("True Optimal Portfolio")
-
     st.write(true_fig)
     st.write(true_port)
