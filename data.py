@@ -81,7 +81,7 @@ table = table[table_col_order]
 def EfficientFrontier(start_date, table, name):
 ### Populate portfolios
 # Calculate daily and annual returns of the stocks
-    table.loc[start_date:]
+    table[start_date:]
     returns_daily = table.pct_change()
     returns_quarterly = returns_daily.mean() * 21
 
@@ -138,5 +138,5 @@ def EfficientFrontier(start_date, table, name):
 
 table.to_csv("prediction/table.csv")
 table2.to_csv("prediction/table2.csv")
-EfficientFrontier(start_date=table.index[-21:],table=table, name="pred")
-EfficientFrontier(start_date=table.index[-21:],table=table2, name="true")
+EfficientFrontier(start_date=table.index[-21],table=table, name="pred")
+EfficientFrontier(start_date=table.index[-21],table=table2, name="true")
