@@ -9,6 +9,7 @@ import plotly.express as px
 import time 
 import yfinance as yf
 from datetime import datetime, timedelta
+from PIL import Image
 
 ################ Website Setup ################
 # Streamlit site configuration
@@ -127,7 +128,7 @@ def EfficientFrontier(df):
     return fig, pred_port
 
 ################ App Content ################
-page_list = ["Forecast", "Optimal Portfolio"]
+page_list = ["About", "Forecast", "Optimal Portfolio"]
 page = st.sidebar.selectbox(
     "View",
     (page_list)
@@ -135,15 +136,21 @@ page = st.sidebar.selectbox(
 pred_fig, pred_port = EfficientFrontier(pred)
 true_fig, true_port = EfficientFrontier(true)
 pure_fig, pure_port = EfficientFrontier(pure)
+
+page_bg_img = Image.open("img/newplot.png")
+
 if page == page_list[0]:
-    st.title("Forecast Performance")
+    st.title("About the Project")
     st.write("Hi, my name is Ian, and this is my first Data Science project, an Asset Allocation System. The system comprises of two parts. First, it utilizes neural networks to forecast the values for 5 major financial markets in the next 23 trading days.  Then, based on the predicted values of the major financial markets, forecast the optimal weight of allocation to each major markets. The allocation of the model is based on Efficient Frontier, which holds the assumption that investors prefer the maximizing return with the least amount of risk. ")
-    st.write("On this page, you will see the performance of my system in forecasting each of the major assets, where I used S&P 500, US 10 Year Treasury Yields, Gold, WTI Oil, and the Dollar Index as my proxies. As my models were not trained beyond 63 trading days before the monthly forecast, or my test set, the charts comprise both the predicted values for 63 trading days before the monthly forecast date, and 21 trading days after. The true value will be updated daily, until the next forecast date.")
     st.write("The project is inherently exploratory with limitations, more information will be updated before January 14, 2021.")
-    st.write("Switch to Optimal Portfolio - Monthly page for recommended allocation purely based on next 21 trading days, which are completely unseen.")
-    st.write(plotting(table,table2))
+    st.image(page_bg_img)
 
 if page == page_list[1]:
+    st.title("Forecast Performance")
+    st.write("Here you will see the performance of my system in forecasting each of the major assets, where I used S&P 500, US 10 Year Treasury Yields, Gold, WTI Oil, and the Dollar Index as my proxies. As my models were not trained beyond 63 trading days before the monthly forecast, or my test set, the charts comprise both the predicted values for 63 trading days before the monthly forecast date, and 21 trading days after. The true value will be updated daily, until the next forecast date.")
+    st.write(plotting(table,table2))
+
+if page == page_list[2]:
     st.write("Here we have a recommended allocation for each market based on prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk. ")
 
     st.title("Predicted Optimal Allocation, Next 21 Trading Days")
