@@ -134,6 +134,7 @@ def EfficientFrontier(start_date, table, name):
 
     # Reorder dataframe columns
     df = df[column_order]
+    df.dropna(how="any", inplace=True)
     df.to_csv(f"prediction/{name}_port.csv")
 
 table.to_csv("prediction/table.csv")
