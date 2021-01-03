@@ -36,12 +36,12 @@ def plotting(pred, true):
             x=true.index, 
             y=true[col],
             mode='lines',
-            name=col.replace("_pred",""),
+            name=col,
             line_color='Red',
             ))
         fig.add_trace(go.Scatter(
             x=pred.index, 
-            y=pred[col+"_pred"],
+            y=pred[col],
             mode='lines',
             name=col + ' Prediction', 
             line_color='teal',
