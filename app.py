@@ -136,7 +136,7 @@ page = st.sidebar.selectbox(
 pred_fig, pred_port = EfficientFrontier(pred)
 true_fig, true_port = EfficientFrontier(true)
 pure_fig, pure_port = EfficientFrontier(pure)
-
+<meta property='og:image' content='img/newplot.png'/>
 page_bg_img = Image.open("img/newplot.png")
 
 if page == page_list[0]:
