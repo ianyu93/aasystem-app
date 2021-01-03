@@ -137,17 +137,26 @@ true_fig, true_port = EfficientFrontier(true)
 pure_fig, pure_port = EfficientFrontier(pure)
 if page == page_list[0]:
     st.title("Forecast Performance")
+    st.write("Hi, my name is Ian, and this is my first Data Science project, an Asset Allocation System. The system comprises of two parts. First, it utilizes neural networks to forecast the values for 5 major financial markets in the next 23 trading days.  Then, based on the predicted values of the major financial markets, forecast the optimal weight of allocation to each major markets. The allocation of the model is based on Efficient Frontier, which holds the assumption that investors prefer the maximizing return with the least amount of risk. ")
+    st.write("On this page, you will see the performance of my system in forecasting each of the major assets, where I used S&P 500, US 10 Year Treasury Yields, Gold, WTI Oil, and the Dollar Index as my proxies. As my models were not trained beyond 63 trading days before the monthly forecast, or my test set, the charts comprise both the predicted values for 63 trading days before the monthly forecast date, and 21 trading days after. The true value will be updated daily, until the next forecast date.")
+    st.write("The project is inherently exploratory with limitations, more information will be updated before January 14, 2021.")
+    st.write("Switch to Optimal Portfolio - Monthly page for recommended allocation purely based on next 21 trading days, which are completely unseen.")
     st.write(plotting(table,table2))
 
 if page == page_list[1]:
-    st.title("Predicted Optimal Portfolio, Next 21 Trading Days")
+    st.write("Here we have a recommended allocation for each market based on prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk. ")
+
+    st.title("Predicted Optimal Allocation, Next 21 Trading Days")
+    st.write("This is based on our predicted values for each market for the next 21 tradings after the forecast date. This represents pure speculation of the future values without considering past values and inherently includes more uncertainty.")
     st.write(pure_fig)
     st.write(pure_port)
 
-    st.title("Predicted Optimal Portfolio, Continuous")
+    st.title("Predicted Optimal Allocation, Continuous")
+    st.write("This is based on our predicted values of the past 63 trading days and next 21 trading days. This is equivalent of continuously update daily on portfolio weighting based on the past 63 trading days as well as predicted values of next 21 trading days. Currently such pipeline is still in design.")
     st.write(pred_fig)
     st.write(pred_port)
 
-    st.title("True Optimal Portfolio, Continuous")
+    st.title("True Optimal Allocation, Continuous")
+    st.write("This is based on true values of the past 63 trading days as well as the next 21 trading days. As the next 21 trading days is still in the future, this chart will be updated daily when the true price is updated. ")
     st.write(true_fig)
     st.write(true_port)
