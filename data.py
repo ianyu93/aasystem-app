@@ -138,5 +138,5 @@ def EfficientFrontier(start_date, table, name):
 
 table.to_csv("prediction/table.csv")
 table2.to_csv("prediction/table2.csv")
-EfficientFrontier(start_date=table[-21:],table=table, name="pred")
-EfficientFrontier(start_date=table[-21:],table=table2, name="true")
+EfficientFrontier(start_date=table.index[-21:],table=table, name="pred")
+EfficientFrontier(start_date=table.index[-21:],table=table2, name="true")
