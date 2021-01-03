@@ -22,6 +22,7 @@ table = pd.read_csv("prediction/table.csv", index_col=0)
 table2 = pd.read_csv("prediction/table2.csv", index_col=0)
 pred = pd.read_csv("prediction/pred_port.csv", index_col=0)
 true = pd.read_csv("prediction/true_port.csv", index_col=0)
+pure = pd.read_csv("prediction/pure_port.csv", index_col=0)
 
 
 ################ App Content ################
@@ -133,16 +134,20 @@ page = st.sidebar.selectbox(
 )
 pred_fig, pred_port = EfficientFrontier(pred)
 true_fig, true_port = EfficientFrontier(true)
+pure_fig, pure_port = EfficientFrontier(pure)
 if page == page_list[0]:
     st.title("Forecast Performance")
     st.write(plotting(table,table2))
 
 if page == page_list[1]:
-    
-    st.title("Predicted Optimal Portfolio")
+    st.title("Predicted Optimal Portfolio, Next 21 Trading Days")
+    st.write(pure_fig)
+    st.write(pure_port)
+
+    st.title("Predicted Optimal Portfolio, Continuous")
     st.write(pred_fig)
     st.write(pred_port)
 
-    st.title("True Optimal Portfolio")
+    st.title("True Optimal Portfolio, Continuous")
     st.write(true_fig)
     st.write(true_port)
