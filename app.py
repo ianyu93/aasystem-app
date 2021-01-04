@@ -21,9 +21,14 @@ st.set_page_config(
 
 table = pd.read_csv("prediction/table.csv", index_col=0)
 table2 = pd.read_csv("prediction/table2.csv", index_col=0)
-pred = pd.read_csv("prediction/pred_port.csv", index_col=0)
-true = pd.read_csv("prediction/true_port.csv", index_col=0)
 pure = pd.read_csv("prediction/pure_port.csv", index_col=0)
+pred1 = pd.read_csv("prediction/pred1_port.csv", index_col=0)
+true1 = pd.read_csv("prediction/true1_port.csv", index_col=0)
+pred2 = pd.read_csv("prediction/pred2_port.csv", index_col=0)
+true2 = pd.read_csv("prediction/true2_port.csv", index_col=0)
+pred3 = pd.read_csv("prediction/pred3_port.csv", index_col=0)
+true3 = pd.read_csv("prediction/true3_port.csv", index_col=0)
+
 
 
 ################ App Content ################
@@ -127,15 +132,59 @@ def EfficientFrontier(df):
     pred_port.columns = ['Minimum Volatility', 'Maximum Sharpe']
     return fig, pred_port
 
+################ Compare Portfolio ################
+def compare_portfolio(table,pred_port,true_port):
+    for col in pred_port.columns:
+        pred_weights = list(pred_port.iloc[3:].loc[:,col])
+        weights = [x/100 for x in pred_weights]
+        returns_daily = table.pct_change()
+        returns_quarterly = returns_daily.sum()
+
+        # Get daily and covariance of returns of the stock
+        cov_daily = returns_daily.cov()
+        cov_quarterly = cov_daily * table.shape[0]
+
+
+        weights = np.array(weights)
+        weights /= np.sum(weights)
+        returns = np.dot(weights, returns_quarterly)
+        volatility = np.sqrt(np.dot(weights.T, np.dot(cov_quarterly, weights)))
+        sharpe = returns / volatility
+        true_port[f"{col} Result"] = [returns*100, volatility*100, sharpe]+pred_weights
+    col_order = ["Minimum Volatility", "Minimum Volatility Result", "Maximum Sharpe", "Maximum Sharpe Result"]
+    true_port = true_port[col_order]
+    return true_port
+
 ################ App Content ################
 page_list = ["About", "Forecast", "Optimal Portfolio"]
 page = st.sidebar.selectbox(
     "View",
     (page_list)
 )
-pred_fig, pred_port = EfficientFrontier(pred)
-true_fig, true_port = EfficientFrontier(true)
 pure_fig, pure_port = EfficientFrontier(pure)
+pred1_fig, pred1_port = EfficientFrontier(pred1)
+true1_fig, true1_port = EfficientFrontier(true1)
+pred2_fig, pred2_port = EfficientFrontier(pred2)
+true2_fig, true2_port = EfficientFrontier(true2)
+pred3_fig, pred3_port = EfficientFrontier(pred3)
+true3_fig, true3_port = EfficientFrontier(true3)
+
+comp1 = compare_portfolio(
+    table=table2,
+    pred_port=pred1_port,
+    true_port=true1_port
+)
+comp2 = compare_portfolio(
+    table=table2,
+    pred_port=pred2_port,
+    true_port=true2_port
+)
+comp3 = compare_portfolio(
+    table=table2,
+    pred_port=pred3_port,
+    true_port=true3_port
+)
+
 page_bg_img = Image.open("img/newplot.png")
 
 if page == page_list[0]:
@@ -150,19 +199,28 @@ if page == page_list[1]:
     st.write(plotting(table,table2))
 
 if page == page_list[2]:
-    st.write("Here we have a recommended allocation for each market based on prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk. ")
-
-    st.title("Predicted Optimal Allocation, Next 21 Trading Days")
-    st.write("This is based on our predicted values for each market for the next 21 tradings after the forecast date. This represents pure speculation of the future values without considering past values and inherently includes more uncertainty.")
+    st.write("Here we have recommended allocations for each market based on prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk. We have validation across different timeframes, all based on 21 trading days prediction.")
+    st.title(f"Predicted Optimal Allocation, Next 21 Trading Days")
     st.write(pure_fig)
     st.write(pure_port)
+    
+    st.title(f"Optimal Allocation, {table2.index[0]} to {table2.index[20]}")
+    st.write("Forecasted Optimal")
+    st.write(pred_fig3)
+    st.write("True Optimal")
+    st.write(true_fig3)
+    st.write(comp3)
 
-    st.title("Predicted Optimal Allocation, Continuous")
-    st.write("This is based on our predicted values of the past 63 trading days and next 21 trading days. This is equivalent of continuously update daily on portfolio weighting based on the past 63 trading days as well as predicted values of next 21 trading days. Currently such pipeline is still in design.")
-    st.write(pred_fig)
-    st.write(pred_port)
+    st.title(f"Predicted Optimal Allocation, {table2.index[21]} to {table2[41]}")
+    st.write("Forecasted Optimal")
+    st.write(pred_fig2)
+    st.write("True Optimal")
+    st.write(true_fig2)
+    st.write(comp2)
 
-    st.title("True Optimal Allocation, Continuous")
-    st.write("This is based on true values of the past 63 trading days as well as the next 21 trading days. As the next 21 trading days is still in the future, this chart will be updated daily when the true price is updated. ")
-    st.write(true_fig)
-    st.write(true_port)
+    st.title(f"Predicted Optimal Allocation, {table2.index[42]} to {table2[62]}")
+    st.write("Forecasted Optimal")
+    st.write(pred_fig1)
+    st.write("True Optimal")
+    st.write(true_fig1)
+    st.write(comp1)
