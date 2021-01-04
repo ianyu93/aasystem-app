@@ -139,5 +139,5 @@ def EfficientFrontier(table, name):
 table.to_csv("prediction/table.csv")
 table2.to_csv("prediction/table2.csv")
 EfficientFrontier(table=table[-21:], name="pure")
-EfficientFrontier(table=table, name="pred")
+EfficientFrontier(table=table[:-21], name="pred")
 EfficientFrontier(table=table2, name="true")
