@@ -141,7 +141,7 @@ page_bg_img = Image.open("img/newplot.png")
 if page == page_list[0]:
     st.title("About the Project")
     st.write("Hi, my name is Ian, and this is my first Data Science project, an Asset Allocation System. The system comprises of two parts. First, it utilizes neural networks to forecast the values for 5 major financial markets in the next 23 trading days.  Then, based on the predicted values of the major financial markets, forecast the optimal weight of allocation to each major markets. The allocation of the model is based on Efficient Frontier, which holds the assumption that investors prefer the maximizing return with the least amount of risk. ")
-    st.write("The project is inherently exploratory with limitations, more information will be updated before January 14, 2021.")
+    st.write("The project is inherently exploratory with limitations, more information will be updated before January 14, 2021. It was based on my 2-week exploration on stock market forecast with intermarket analysis, which is still on GitHub [here](https://github.com/ianyu93/stock-market-forecast). All the scripts for this system will soon be updated. In the meantime, check out my [personal homepage](https://ianyu93.github.io/homepage/).")
     st.image(page_bg_img)
 
 if page == page_list[1]:

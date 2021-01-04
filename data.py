@@ -82,11 +82,11 @@ def EfficientFrontier(table, name):
 ### Populate portfolios
 # Calculate daily and annual returns of the stocks
     returns_daily = table.pct_change()
-    returns_quarterly = returns_daily.mean() * 21
+    returns_quarterly = returns_daily.sum()
 
     # Get daily and covariance of returns of the stock
     cov_daily = returns_daily.cov()
-    cov_quarterly = cov_daily * 21
+    cov_quarterly = cov_daily * table.shape[0]
 
     # Define selected assets
     selected = table.columns
