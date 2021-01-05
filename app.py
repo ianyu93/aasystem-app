@@ -21,11 +21,15 @@ st.set_page_config(
 
 table = pd.read_csv("prediction/table.csv", index_col=0)
 table2 = pd.read_csv("prediction/table2.csv", index_col=0)
+
 pure = pd.read_csv("prediction/pure_port.csv", index_col=0)
+
 pred1 = pd.read_csv("prediction/pred1_port.csv", index_col=0)
 true1 = pd.read_csv("prediction/true1_port.csv", index_col=0)
+
 pred2 = pd.read_csv("prediction/pred2_port.csv", index_col=0)
 true2 = pd.read_csv("prediction/true2_port.csv", index_col=0)
+
 pred3 = pd.read_csv("prediction/pred3_port.csv", index_col=0)
 true3 = pd.read_csv("prediction/true3_port.csv", index_col=0)
 
@@ -134,6 +138,7 @@ def EfficientFrontier(df):
 
 ################ Compare Portfolio ################
 def compare_portfolio(table,pred_port,true_port):
+    result = true_port.copy()
     for col in pred_port.columns:
         pred_weights = list(pred_port.iloc[3:].loc[:,col])
         weights = [x/100 for x in pred_weights]
@@ -150,10 +155,10 @@ def compare_portfolio(table,pred_port,true_port):
         returns = np.dot(weights, returns_quarterly)
         volatility = np.sqrt(np.dot(weights.T, np.dot(cov_quarterly, weights)))
         sharpe = returns / volatility
-        true_port[f"{col} Result"] = [returns*100, volatility*100, sharpe]+pred_weights
+        result[f"{col} Result"] = [returns*100, volatility*100, sharpe]+pred_weights
     col_order = ["Minimum Volatility", "Minimum Volatility Result", "Maximum Sharpe", "Maximum Sharpe Result"]
-    true_port = true_port[col_order]
-    return true_port
+    result = result[col_order]
+    return result
 
 ################ App Content ################
 page_list = ["About", "Forecast", "Optimal Portfolio"]
@@ -162,25 +167,28 @@ page = st.sidebar.selectbox(
     (page_list)
 )
 pure_fig, pure_port = EfficientFrontier(pure)
+
 pred1_fig, pred1_port = EfficientFrontier(pred1)
 true1_fig, true1_port = EfficientFrontier(true1)
+
 pred2_fig, pred2_port = EfficientFrontier(pred2)
 true2_fig, true2_port = EfficientFrontier(true2)
+
 pred3_fig, pred3_port = EfficientFrontier(pred3)
 true3_fig, true3_port = EfficientFrontier(true3)
 
 comp1 = compare_portfolio(
-    table=table2,
+    table=table2[:21],
     pred_port=pred1_port,
     true_port=true1_port
 )
 comp2 = compare_portfolio(
-    table=table2,
+    table=table2[21:42],
     pred_port=pred2_port,
     true_port=true2_port
 )
 comp3 = compare_portfolio(
-    table=table2,
+    table=table2[42:63],
     pred_port=pred3_port,
     true_port=true3_port
 )
@@ -204,12 +212,13 @@ if page == page_list[2]:
     st.write(pure_fig)
     st.write(pure_port)
     
-    st.title(f"Optimal Allocation, {table2.index[0]} to {table2.index[20]}")
+    st.title(f"Optimal Allocation, {table2.index[42]} to {table2.index[62]}")
     st.write("Forecasted Optimal")
     st.write(pred3_fig)
     st.write("True Optimal")
     st.write(true3_fig)
     st.write(comp3)
+    # st.write(comp3)
 
     st.title(f"Predicted Optimal Allocation, {table2.index[21]} to {table2.index[41]}")
     st.write("Forecasted Optimal")
@@ -217,10 +226,12 @@ if page == page_list[2]:
     st.write("True Optimal")
     st.write(true2_fig)
     st.write(comp2)
+    # st.write(comp2)
 
-    st.title(f"Predicted Optimal Allocation, {table2.index[42]} to {table2.index[62]}")
+    st.title(f"Predicted Optimal Allocation, {table2.index[0]} to {table2.index[20]}")
     st.write("Forecasted Optimal")
     st.write(pred1_fig)
     st.write("True Optimal")
     st.write(true1_fig)
     st.write(comp1)
+    # st.write(comp1)
