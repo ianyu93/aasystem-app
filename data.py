@@ -30,6 +30,21 @@ for filename in all_files:
 table = pd.concat(all_data, axis=1, ignore_index=False)
 table.index = pd.to_datetime(table.index)
 
+################ Getting Predicted Data ################
+
+# Getting all CSV files from ./prediction
+all_files63 = glob.glob('prediction' + "/*_63Dprediction.csv")
+
+# Put all dataframe into a list
+all_data63 = []
+for filename in all_files63:
+    df = pd.read_csv(filename, index_col=0, header=0)
+    all_data63.append(df)
+
+# Concatenate all dataframes in all_data list, 
+table3 = pd.concat(all_data63, axis=1, ignore_index=False)
+table3.index = pd.to_datetime(table3.index)
+
 ################ Getting Real-Time Data ################
 ## Get data
 start = table.index[0]
@@ -145,3 +160,7 @@ EfficientFrontier(table=table[21:42], name="pred2")
 EfficientFrontier(table=table2[21:42], name="true2")
 EfficientFrontier(table=table[42:63], name="pred3")
 EfficientFrontier(table=table2[42:63], name="true3")
+
+## 63 Day Prediction
+EfficientFrontier(table=table3[:63], name="pred63")
+EfficientFrontier(table=table2[:63], name="true63")

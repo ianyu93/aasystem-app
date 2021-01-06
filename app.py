@@ -33,7 +33,8 @@ true2 = pd.read_csv("prediction/true2_port.csv", index_col=0)
 pred3 = pd.read_csv("prediction/pred3_port.csv", index_col=0)
 true3 = pd.read_csv("prediction/true3_port.csv", index_col=0)
 
-
+pred63 = pd.read_csv("prediction/pred63_port.csv", index_col=0)
+true63 = pd.read_csv("prediction/true63_port.csv", index_col=0)
 
 ################ App Content ################
 
@@ -161,11 +162,6 @@ def compare_portfolio(table,pred_port,true_port):
     return result
 
 ################ App Content ################
-page_list = ["About", "Forecast", "Optimal Portfolio"]
-page = st.sidebar.selectbox(
-    "View",
-    (page_list)
-)
 pure_fig, pure_port = EfficientFrontier(pure)
 
 pred1_fig, pred1_port = EfficientFrontier(pred1)
@@ -176,6 +172,9 @@ true2_fig, true2_port = EfficientFrontier(true2)
 
 pred3_fig, pred3_port = EfficientFrontier(pred3)
 true3_fig, true3_port = EfficientFrontier(true3)
+
+pred63_fig, pred63_port = EfficientFrontier(pred63)
+true63_fig, true63_port = EfficientFrontier(true63)
 
 comp1 = compare_portfolio(
     table=table2[:21],
@@ -193,6 +192,18 @@ comp3 = compare_portfolio(
     true_port=true3_port
 )
 
+comp4 = compare_portfolio(
+    table=table2[:63],
+    pred_port=pred63_port,
+    true_port=true63_port
+)
+
+################ Page Layout ################
+page_list = ["About", "Forecast", "Optimal Portfolio Month", "Optimal Portfolio Quarter"]
+page = st.sidebar.selectbox(
+    "View",
+    (page_list)
+)
 page_bg_img = Image.open("img/newplot.png")
 
 if page == page_list[0]:
@@ -235,3 +246,12 @@ if page == page_list[2]:
     st.write(true1_fig)
     st.write(comp1)
     # st.write(comp1)
+
+if page == page_list[3]:
+    st.write("Here we have recommended allocations for each market based on 63 trading day prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk.")
+    st.title(f"Predicted Optimal Allocation, {table2.index[0]} to {table2.index[62]}")
+    st.write("Forecasted Optimal")
+    st.write(pred63_fig)
+    st.write("True Optimal")
+    st.write(true63_fig)
+    st.write(comp4)
