@@ -97,7 +97,7 @@ def EfficientFrontier(table, name):
 ### Populate portfolios
 # Calculate daily and annual returns of the stocks
     returns_daily = table.pct_change()
-    returns_quarterly = returns_daily.sum()
+    returns_quarterly = (table.iloc[-1]-table.iloc[0])/table.iloc[0]
 
     # Get daily and covariance of returns of the stock
     cov_daily = returns_daily.cov()
