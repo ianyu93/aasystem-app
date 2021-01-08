@@ -1,6 +1,9 @@
 ################ Import Necessary Packages ################
 import os
 import sys
+from pathlib import Path
+from PIL import Image
+from datetime import datetime, timedelta
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -8,14 +11,13 @@ import plotly.graph_objects as go
 import plotly.express as px
 import time 
 import yfinance as yf
-from datetime import datetime, timedelta
-from PIL import Image
+import base64
 
 ################ Website Setup ################
 # Streamlit site configuration
 st.set_page_config(
     page_title="Asset Allocator",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="auto")
 ################ Getting All Data ################
 
@@ -36,7 +38,19 @@ true3 = pd.read_csv("prediction/true3_port.csv", index_col=0)
 pred63 = pd.read_csv("prediction/pred63_port.csv", index_col=0)
 true63 = pd.read_csv("prediction/true63_port.csv", index_col=0)
 
-################ App Content ################
+################ Define Functions ################
+## Read markdown for web content
+def read_markdown_file(markdown_file):
+    '''
+    A function that reads markdown files for streamlit, copied from:
+    https://pmbaumgartner.github.io/streamlitopedia/markdown.html
+    '''
+    return Path(markdown_file).read_text()
+
+def img_to_bytes(img_path):
+    img_bytes = Path(img_path).read_bytes()
+    encoded = base64.b64encode(img_bytes).decode()
+    return encoded
 
 ## Plotly chart for SPX
 def plotting(pred, true):
@@ -60,8 +74,8 @@ def plotting(pred, true):
             ))
 
         fig.update_layout(
-            height=500, 
-            width=900,
+            height=388, 
+            width=700,
             title = f"Monthly Forecast, {col}",
             title_font_size = 30, 
             title_x=0.5,
@@ -111,6 +125,7 @@ def EfficientFrontier(df):
         size_max=60,
         color="Sharpe Ratio",
         color_continuous_scale = 'aggrnyl',
+        hover_data=df.columns
         
     )
     fig.add_scatter(
@@ -131,10 +146,10 @@ def EfficientFrontier(df):
 
     fig.update_layout(
         height=800,
-        title_text='Portfolio'
+        title_text=f"Max Sharpe return is {sharpe_portfolio['Returns'].apply(lambda x: x*100).values} %"
     )
     pred_port = pd.concat([mv_port.T, ms_port.T], axis = 1)
-    pred_port.columns = ['Minimum Volatility', 'Maximum Sharpe']
+    pred_port.columns = ['Min. Vol', 'Max Sharpe']
     return fig, pred_port
 
 ################ Compare Portfolio ################
@@ -157,7 +172,7 @@ def compare_portfolio(table,pred_port,true_port):
         volatility = np.sqrt(np.dot(weights.T, np.dot(cov_quarterly, weights)))
         sharpe = returns / volatility
         result[f"{col} Result"] = [returns*100, volatility*100, sharpe]+pred_weights
-    col_order = ["Minimum Volatility", "Minimum Volatility Result", "Maximum Sharpe", "Maximum Sharpe Result"]
+    col_order = ["Min. Vol", "Min. Vol Result", "Max Sharpe", "Max Sharpe Result"]
     result = result[col_order]
     return result
 
@@ -199,59 +214,80 @@ comp4 = compare_portfolio(
 )
 
 ################ Page Layout ################
-page_list = ["About", "Forecast", "Optimal Portfolio Month", "Optimal Portfolio Quarter"]
+page_list = ["About", "Forecast", "Optimal Portfolio Monthly", "Optimal Portfolio Quarterly"]
 page = st.sidebar.selectbox(
     "View",
     (page_list)
 )
-page_bg_img = Image.open("img/newplot.png")
+# page_bg_img = Image.open("img/newplot.png")
+
+predict_list = [
+    f"{table.index[63]} to {table.index[-1]}",
+    f"{table.index[42]} to {table.index[62]}",
+    f"{table.index[21]} to {table.index[41]}",
+    f"{table.index[0]} to {table.index[20]}"
+]
 
 if page == page_list[0]:
-    st.title("About the Project")
-    st.write("Hi, my name is Ian, and this is my first Data Science project, an Asset Allocation System. The system comprises of two parts. First, it utilizes neural networks to forecast the values for 5 major financial markets in the next 23 trading days.  Then, based on the predicted values of the major financial markets, forecast the optimal weight of allocation to each major markets. The allocation of the model is based on Efficient Frontier, which holds the assumption that investors prefer the maximizing return with the least amount of risk. ")
-    st.write("The project is inherently exploratory with limitations, more information will be updated before January 14, 2021. It was based on my 2-week exploration on stock market forecast with intermarket analysis, which is still on GitHub [here](https://github.com/ianyu93/stock-market-forecast). All the scripts for this system will soon be updated. In the meantime, check out my [personal homepage](https://ianyu93.github.io/homepage/).")
-    st.image(page_bg_img)
+    about = read_markdown_file("about.md")
+    st.markdown(about, unsafe_allow_html=True)
 
 if page == page_list[1]:
     st.title("Forecast Performance")
-    st.write("Here you will see the performance of my system in forecasting each of the major assets, where I used S&P 500, US 10 Year Treasury Yields, Gold, WTI Oil, and the Dollar Index as my proxies. As my models were not trained beyond 63 trading days before the monthly forecast, or my test set, the charts comprise both the predicted values for 63 trading days before the monthly forecast date, and 21 trading days after. The true value will be updated daily, until the next forecast date.")
+    st.write(f"Here is the forecast performance of the AASystem. The system has been continuously predicting each market with data from 21 trading days ago, and has not seen any data from {table.index[0]}. The model has predicted values up to {table.index[-1]}, and the true value for each market will be updated daily until then.")
     st.write(plotting(table,table2))
 
 if page == page_list[2]:
-    st.write("Here we have recommended allocations for each market based on prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk. We have validation across different timeframes, all based on 21 trading days prediction.")
-    st.title(f"Predicted Optimal Allocation, Next 21 Trading Days")
-    st.write(pure_fig)
-    st.write(pure_port)
-    
-    st.title(f"Optimal Allocation, {table2.index[42]} to {table2.index[62]}")
-    st.write("Forecasted Optimal")
-    st.write(pred3_fig)
-    st.write("True Optimal")
-    st.write(true3_fig)
-    st.write(comp3)
-    # st.write(comp3)
-
-    st.title(f"Predicted Optimal Allocation, {table2.index[21]} to {table2.index[41]}")
-    st.write("Forecasted Optimal")
-    st.write(pred2_fig)
-    st.write("True Optimal")
-    st.write(true2_fig)
-    st.write(comp2)
-    # st.write(comp2)
-
-    st.title(f"Predicted Optimal Allocation, {table2.index[0]} to {table2.index[20]}")
-    st.write("Forecasted Optimal")
-    st.write(pred1_fig)
-    st.write("True Optimal")
-    st.write(true1_fig)
-    st.write(comp1)
-    # st.write(comp1)
+    how = about = read_markdown_file("how.md")
+    timeframe = st.selectbox("Choose a Timeframe", predict_list)
+    if timeframe == predict_list[0]:
+        st.title(f"Optimal Allocation, Next 21 Days")
+        st.write(pure_port)
+        st.write(pure_fig)
+    if timeframe == predict_list[1]:
+        st.title(f"Optimal Allocation")
+        st.write(comp3)
+        st.write("Select Forecasted ")
+        if st.checkbox('Forecasted Optimal Efficient Frontier'):
+            st.write("Forecasted Optimal")
+            st.write(pred3_fig)
+        if st.checkbox("True Optimal Efficient Fronter"):
+            st.write("True Optimal")
+            st.write(true3_fig)
+    if timeframe == predict_list[2]:
+        st.title(f"Optimal Allocation")
+        st.write(comp2)
+        if st.checkbox('Forecasted Optimal Efficient Frontier'):
+            st.write("Forecasted Optimal")
+            st.write(pred2_fig)
+        if st.checkbox("True Optimal Efficient Fronter"):
+            st.write("True Optimal")
+            st.write(true2_fig)
+        # st.write(comp2)
+    if timeframe == predict_list[3]:
+        st.title(f"Optimal Allocation")
+        st.write(comp1)
+        if st.checkbox('Forecasted Optimal Efficient Frontier'):
+            st.write("Forecasted Optimal")
+            st.write(pred1_fig)
+        if st.checkbox("True Optimal Efficient Fronter"):
+            st.write("True Optimal")
+            st.write(true1_fig)
+        # st.write(comp1)
+    st.markdown(how)
+    header_html = "<img src='data:image/png;base64,{}' class='img-fluid' height=500>".format(
+    img_to_bytes("img/mpt-image-2.jpg"))
+    st.markdown(header_html, unsafe_allow_html=True)
+    st.markdown("*How to find Efficient Frontier, image from [guidedchoice.com](https://www.guidedchoice.com/video/dr-harry-markowitz-father-of-modern-portfolio-theory/)*")
 
 if page == page_list[3]:
-    st.write("Here we have recommended allocations for each market based on 63 trading day prediction. We select the most optimal weighting based on the highest Sharpe Ratio. The Sharpe Ratio is the average return earned in excess of the risk-free rate (0 in our system) per unit of volatility or total risk.")
-    st.title(f"Predicted Optimal Allocation, {table2.index[0]} to {table2.index[62]}")
-    st.write("Forecasted Optimal")
-    st.write(pred63_fig)
-    st.write("True Optimal")
-    st.write(true63_fig)
+    st.title(f"Optimal Allocation")
+    st.write("Please refer to 'Optimal Portfolio Monthly' for how to read the charts. Here we also compare the true optimal weighting against the AASystem's choice for the last 63 trading days, but here the system predicted 63 trading days, or a quarter, in advance.")
+    st.title(f"{table2.index[0]} to {table2.index[62]}")
     st.write(comp4)
+    if st.checkbox('Forecasted Optimal Efficient Frontier'):
+        st.write("Forecasted Optimal")
+        st.write(pred63_fig)
+    if st.checkbox("True Optimal Efficient Fronter"):
+        st.write("True Optimal")
+        st.write(true63_fig)
