@@ -214,7 +214,7 @@ comp4 = compare_portfolio(
 )
 
 ################ Page Layout ################
-page_list = ["About", "Forecast", "Optimal Portfolio Monthly", "Optimal Portfolio Quarterly"]
+page_list = ["About", "Architecture","Forecast", "Optimal Portfolio Monthly", "Optimal Portfolio Quarterly"]
 page = st.sidebar.selectbox(
     "View",
     (page_list)
@@ -233,11 +233,14 @@ if page == page_list[0]:
     st.markdown(about, unsafe_allow_html=True)
 
 if page == page_list[1]:
+    architecturet = read_markdown_file("architecture.md")
+    st.markdown(architecturet, unsafe_allow_html=True)
+if page == page_list[2]:
     st.title("Forecast Performance")
     st.write(f"Here is the forecast performance of the AASystem. The system has been continuously predicting each market with data from 21 trading days ago, and has not seen any data from {table.index[0]}. The model has predicted values up to {table.index[-1]}, and the true value for each market will be updated daily until then.")
     st.write(plotting(table,table2))
 
-if page == page_list[2]:
+if page == page_list[3]:
     how = about = read_markdown_file("how.md")
     timeframe = st.selectbox("Choose a Timeframe", predict_list)
     if timeframe == predict_list[0]:
@@ -280,7 +283,7 @@ if page == page_list[2]:
     st.markdown(header_html, unsafe_allow_html=True)
     st.markdown("*How to find Efficient Frontier, image from [guidedchoice.com](https://www.guidedchoice.com/video/dr-harry-markowitz-father-of-modern-portfolio-theory/)*")
 
-if page == page_list[3]:
+if page == page_list[4]:
     st.title(f"Optimal Allocation")
     st.write("Please refer to 'Optimal Portfolio Monthly' for how to read the charts. Here we also compare the true optimal weighting against the AASystem's choice for the last 63 trading days, but here the system predicted 63 trading days, or a quarter, in advance.")
     st.title(f"{table2.index[0]} to {table2.index[62]}")

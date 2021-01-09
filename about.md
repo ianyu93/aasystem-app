@@ -2,7 +2,17 @@
 
 When it comes to applying AI in investment, the most obvious application would be predicting the stock market. After all, that is "where the money is made". Predicting the stock market, however, is inherently hard and risky. Even if one can create a model that forecasts relatively well, what is the next step? How much money should one invest? How does one control the risks to protect downside? In the financial world, not only does security selection matter, but diversification through asset allocation also matters. Asset allocation is not confined within the stock market world only, but also across different financial markets, such as currency, commodity, and the bond market. 
 
-The AASystem, my Asset Allocation System, does exactly that in two parts. First, AASystem performs monthly and quarterly forecast of the price movement across different financial markets. Then, based on the predicted values across different markets, the system allocates weightings across different asset classes that maximizes return while minimizing risks. **Essentially, the AASystem tells me how much money should I put in stocks, bonds, gold, oil, and dollars market to maximize my return while minimizing risks next month/quarter**. 
+The AASystem, my Asset Allocation System, does exactly that in two parts:
+
+1. First, AASystem performs monthly and quarterly forecast of the price movement across different financial markets. 
+2. Then, based on the predicted values across different markets, the system allocates weightings across different asset classes that maximizes return while minimizing risks. 
+
+**Essentially, the AASystem tells me how much money should I put in stocks, bonds, gold, oil, and dollars market to maximize my return while minimizing risks next month/quarter**. 
+
+<div>
+<Center>
+<img src="https://imgur.com/q4wCxCZ.png" height=225 alt="Two parts of the the AASystem">
+</div>
 
 ---
 ### **How is AASystem Different?**
