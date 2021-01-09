@@ -60,6 +60,13 @@ The AASystem automated workflow is split into 6 stages, from sourcing and cleani
 
 **Stage 6: Asset Allocation.** Based on the predicted values, the AASystem makes a set of recommendations based on the predicted values. This website is updated daily to compare true market value and forecasted values. 
 
+<div>
+<Center>
+<img src="https://imgur.com/8s3Ht7h.png" height=180 alt="Bond Market and the Stock Market have inverse relationship">
+
+*Tools Used in the Project*
+</div>
+
 ---
 ### **Limitations**
 The AASystem is currently limited to market-level allocation, controlling investment risks from the macro-level. The actual returns and volatility are still subject to securities selection and allocation in each market. The subsystem that performs securities selection and allocation in each market will continue to be developed.
