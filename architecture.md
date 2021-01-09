@@ -35,13 +35,13 @@ In a nutshell, our model architecture looks like this:
 
 <div>
 <Center>
-<img src="https://imgur.com/mUESztw.png" height=400>
+<img src="https://imgur.com/mUESztw.png" height=350>
 </div>
 
 **Recurrent Neural Netowrk** is a type of neural network that allows us to learn backwards in sequence. It takes in a 3D shape array, input the data as (batch size, sequence, features). Batch size would be the number of data points that we are passing into the neural network at once. If we have a batch size of 1024, then we are passing 1024 trading days into the network at a time. We will have the hypertuner to determine what is the optimal batch size. Sequence length is about the past context, where if we set a sequence length of 10, the model would learn how does the previous 10 sequence affect the current input. We will also leave it to the hypertuner to determine the best sequence length parameter. Features dimension would simply be the number of features we have in our dataset.
 <div>
 <Center>
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Recurrent_neural_network_unfold.svg/2880px-Recurrent_neural_network_unfold.svg.png" height=400>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Recurrent_neural_network_unfold.svg/2880px-Recurrent_neural_network_unfold.svg.png" width=700>
 </div>
 <div>
 <Center>
