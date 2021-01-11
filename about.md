@@ -71,7 +71,7 @@ The AASystem automated workflow is split into 6 stages, from sourcing and cleani
 ### **Limitations**
 The AASystem is currently limited to market-level allocation, controlling investment risks from the macro-level. The actual returns and volatility are still subject to securities selection and allocation in each market. The subsystem that performs securities selection and allocation in each market will continue to be developed.
 
-The evaluation metrics on Optimal Portfolio assume a buy-and-hold scenario from investors. In practice, buy-and-hold strategy rarely lasts only a month. I will also continue to optimize the predictive models to improve longer-term forecasts.
+The evaluation metrics on Optimal Portfolio assume a buy-and-hold scenario from investors. In practice, buy-and-hold strategy rarely lasts only a month. I will also continue to optimize the predictive models to improve longer-term forecasts. The model also does not consider weight cap, such as maximum weighting for a given market should be X%. 
 
 ---
 ### **Acknowledgement and Notes**

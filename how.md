@@ -31,4 +31,7 @@ There are 4 timeframes that you can select. By default, the latest forecast is d
 
 ### **Efficient Frontier Interactive Graph**
 
-If neither the Min. Vol nor the Max Sharpe weighting satifies your need, you can examine other weightings along the Efficient Frontier through the interactive chart. Select *Forecasted Optimal Efficient Frontier* for what the AASystem prediced and *True Optimal Efficient Frontier* to compare. 
+If neither the Min. Vol nor the Max Sharpe weighting satifies your need, you can examine other weightings along the Efficient Frontier through the interactive chart. Select *Forecasted Optimal Efficient Frontier* for what the AASystem prediced and *True Optimal Efficient Frontier* to compare.
+
+### **Acknowledgement**
+The codes to calculate and plot the Efficient Frontier was modified from [here](https://github.com/PyDataBlog/Python-for-Data-Science).
