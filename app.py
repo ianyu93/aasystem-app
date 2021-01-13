@@ -64,6 +64,7 @@ def plotting(pred, true):
         y_pred = pred[col][:len(true[col])]
         mse = mean_squared_error(y_true, y_pred)
         rmse = math.sqrt(mse)
+        nrmse = rmse / y_true.mean()
         fig = go.Figure(go.Scatter(
             x=true.index, 
             y=true[col],
@@ -82,7 +83,7 @@ def plotting(pred, true):
         fig.update_layout(
             height=388, 
             width=700,
-            title = f"Monthly Forecast, {col}, RMSE: {rmse:0.2f}",
+            title = f"Monthly Forecast, {col}, NRMSE: {nrmse*100:0.2f}%",
             title_font_size = 25, 
             title_x=0.5,
             legend=dict(
@@ -240,7 +241,7 @@ if page == page_list[0]:
 
 if page == page_list[1]:
     st.title("Forecast Performance")
-    st.write(f"Here is the forecast performance of the AASystem. The system has been continuously predicting each market with data from 21 trading days ago, and has not seen any data from {table.index[0]}. The model has predicted values up to {table.index[-1]}, and the true value for each market will be updated daily until then.")
+    st.write(f"Here is the forecast performance of the AASystem. The system has been continuously predicting each market with data from 21 trading days ago, and has not seen any data from {table.index[0]}. The model has predicted values up to {table.index[-1]}, and the true value for each market will be updated daily until then. For each graph, a [Normalized Root-Mean-Squared-Error by Mean](https://www.marinedatascience.co/blog/2019/01/07/normalizing-the-rmse/) is displayed in percentage, where lower values indicate less residual variance.")
     st.write(plotting(table,table2))
 
 if page == page_list[2]:
