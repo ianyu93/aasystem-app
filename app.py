@@ -4,9 +4,11 @@ import sys
 from pathlib import Path
 from PIL import Image
 from datetime import datetime, timedelta
+from sklearn.metrics import mean_squared_error
 import streamlit as st
 import numpy as np
 import pandas as pd
+import math
 import plotly.graph_objects as go
 import plotly.express as px
 import time 
@@ -58,6 +60,10 @@ def plotting(pred, true):
     A function that plots both predicted values and true values
     '''
     for col in true.columns:
+        y_true = true[col]
+        y_pred = pred[col][:len(true[col])]
+        mse = mean_squared_error(y_true, y_pred)
+        rmse = math.sqrt(mse)
         fig = go.Figure(go.Scatter(
             x=true.index, 
             y=true[col],
@@ -76,8 +82,8 @@ def plotting(pred, true):
         fig.update_layout(
             height=388, 
             width=700,
-            title = f"Monthly Forecast, {col}",
-            title_font_size = 30, 
+            title = f"Monthly Forecast, {col}, RMSE: {rmse:0.2f}",
+            title_font_size = 25, 
             title_x=0.5,
             legend=dict(
                 yanchor="top",
