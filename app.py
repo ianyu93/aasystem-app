@@ -51,8 +51,7 @@ def read_markdown_file(markdown_file):
 
 def img_to_bytes(img_path):
     img_bytes = Path(img_path).read_bytes()
-    encoded = base64.b64encode(img_bytes).decode()
-    return encoded
+    return base64.b64encode(img_bytes).decode()
 
 ## Plotly chart for SPX
 def plotting(pred, true):
@@ -114,16 +113,12 @@ def EfficientFrontier(df):
     mv_port = min_variance_port.copy()
     ms_port = sharpe_portfolio.copy()
     for col in min_variance_port.columns:
-        if col == 'Sharpe Ratio':
-            pass
-        else:
-            mv_port[col] = mv_port[col].apply(lambda x: x*100)
-            
+        if col != 'Sharpe Ratio':
+            mv_port[col] = mv_port[col] * 100
+
     for col in sharpe_portfolio.columns:
-        if col == 'Sharpe Ratio':
-            pass
-        else:
-            ms_port[col] = ms_port[col].apply(lambda x: x*100)
+        if col != 'Sharpe Ratio':
+            ms_port[col] = ms_port[col] * 100
     # plot frontier, max sharpe & min Volatility values with a scatterplot
     fig = px.scatter(
         df, 
@@ -133,7 +128,7 @@ def EfficientFrontier(df):
         color="Sharpe Ratio",
         color_continuous_scale = 'aggrnyl',
         hover_data=df.columns
-        
+
     )
     fig.add_scatter(
         x=sharpe_portfolio['Volatility'], 
@@ -153,7 +148,7 @@ def EfficientFrontier(df):
 
     fig.update_layout(
         height=800,
-        title_text=f"Max Sharpe return is {sharpe_portfolio['Returns'].apply(lambda x: x*100).values} %"
+        title_text=f"Max Sharpe return is {(sharpe_portfolio['Returns'] * 100).values} %",
     )
     pred_port = pd.concat([mv_port.T, ms_port.T], axis = 1)
     pred_port.columns = ['Min. Vol', 'Max Sharpe']
@@ -248,11 +243,11 @@ if page == page_list[2]:
     how = about = read_markdown_file("how.md")
     timeframe = st.selectbox("Choose a Timeframe", predict_list)
     if timeframe == predict_list[0]:
-        st.title(f"Optimal Allocation, Next 21 Days")
+        st.title("Optimal Allocation, Next 21 Days")
         st.write(pure_port)
         st.write(pure_fig)
     if timeframe == predict_list[1]:
-        st.title(f"Optimal Allocation")
+        st.title("Optimal Allocation")
         st.write(comp3)
         st.write("Select Forecasted ")
         if st.checkbox('Forecasted Optimal Efficient Frontier'):
@@ -262,7 +257,7 @@ if page == page_list[2]:
             st.write("True Optimal")
             st.write(true3_fig)
     if timeframe == predict_list[2]:
-        st.title(f"Optimal Allocation")
+        st.title("Optimal Allocation")
         st.write(comp2)
         if st.checkbox('Forecasted Optimal Efficient Frontier'):
             st.write("Forecasted Optimal")
@@ -270,9 +265,9 @@ if page == page_list[2]:
         if st.checkbox("True Optimal Efficient Fronter"):
             st.write("True Optimal")
             st.write(true2_fig)
-        # st.write(comp2)
+            # st.write(comp2)
     if timeframe == predict_list[3]:
-        st.title(f"Optimal Allocation")
+        st.title("Optimal Allocation")
         st.write(comp1)
         if st.checkbox('Forecasted Optimal Efficient Frontier'):
             st.write("Forecasted Optimal")
@@ -280,15 +275,14 @@ if page == page_list[2]:
         if st.checkbox("True Optimal Efficient Fronter"):
             st.write("True Optimal")
             st.write(true1_fig)
-        # st.write(comp1)
+            # st.write(comp1)
     st.markdown(how)
-    header_html = "<img src='data:image/png;base64,{}' class='img-fluid' height=500>".format(
-    img_to_bytes("img/mpt-image-2.jpg"))
+    header_html = f"""<img src='data:image/png;base64,{img_to_bytes("img/mpt-image-2.jpg")}' class='img-fluid' height=500>"""
     st.markdown(header_html, unsafe_allow_html=True)
     st.markdown("*How to find Efficient Frontier, image from [guidedchoice.com](https://www.guidedchoice.com/video/dr-harry-markowitz-father-of-modern-portfolio-theory/)*")
 
 if page == page_list[3]:
-    st.title(f"Optimal Allocation")
+    st.title("Optimal Allocation")
     st.write("Please refer to 'Optimal Portfolio Monthly' for how to read the charts. Here we also compare the true optimal weighting against the AASystem's choice for the last 63 trading days, but here the system predicted 63 trading days, or a quarter, in advance.")
     st.title(f"{table2.index[0]} to {table2.index[62]}")
     st.write(comp4)

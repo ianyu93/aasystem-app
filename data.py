@@ -3,7 +3,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-import time 
+import time
 import yfinance as yf
 from fredapi import Fred
 import quandl
@@ -69,11 +69,8 @@ wti.columns = ["WTI"]
 
 ## Reindexing with date_range
 date_range = pd.date_range(
-    start = start,
-    end = datetime.today(),  
-    freq = 'B', 
-    normalize = True
-    )
+    start=start, end=datetime.now(), freq='B', normalize=True
+)
 
 # Reindexing with forward fill to fill new missing values with last valid observation
 stock = stock.reindex(index=date_range, method='ffill')
@@ -120,7 +117,7 @@ def EfficientFrontier(table, name):
     np.random.seed(101)
 
     # Populate the empty lists with each portfolios returns,risk and weights
-    for single_portfolio in range(num_portfolios):
+    for _ in range(num_portfolios):
         weights = np.random.random(num_assets)
         weights /= np.sum(weights)
         returns = np.dot(weights, returns_quarterly)
