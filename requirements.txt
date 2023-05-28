@@ -1,6 +1,6 @@
 fredapi==0.4.2
-numpy==1.20
-pandas==1.1.5
+numpy==1.23.5
+pandas==2.0.0
 plotly==4.14.1
 python-dateutil==2.8.1
 python-slugify==4.0.1
